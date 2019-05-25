@@ -6,7 +6,7 @@ import './App.css';
 function App() {
   return (
     <div className="App">
-      <ReactPDFViewer url={sampleFile}/>
+      <ReactPDFViewer url={sampleFile} _Hook_onSearchClick={(e)=>(console.log(e))}/>
     </div>
   );
 }

@@ -3,11 +3,24 @@ var pdfjsLib = require('./../lib/pdf');
 import ReactPDF_Header from './Components/Header/index';
 //import styles from './style.css';
 
+const styles = {
+  mainContainer: {
+    "display": "flex",
+    "flexDirection": "column",
+    "alignItems": "center",
+    "justifyContent": "center",
+    "backgroundColor": "#282c34",
+    "fontSize": "calc(10px + 2vmin)",
+    "color": "white"
+  }
+}
 class ReactPDFViewer extends React.Component {
   
   constructor(props) {
     super(props);
     this.state = {
+      availWidth: null,
+      availHeight: null,
       PDFJSBuildVersion: pdfjsLib.build,
       PDFJSVersion: pdfjsLib.version, 
       pdfLoaded: false,
@@ -40,7 +53,6 @@ class ReactPDFViewer extends React.Component {
         //
         var canvas = document.getElementById('pv-id-canvas');
         var context = canvas.getContext('2d');
-        debugger;
         canvas.height = viewport.height;
         canvas.width = viewport.width;
         //
@@ -52,44 +64,65 @@ class ReactPDFViewer extends React.Component {
         };
         // Initiate the loaded state
         this.setState({
-          pdfLoaded: true
+          pdfLoaded: true,
+          availHeight: viewport.height,
+          availWidth: viewport.width
         })
         page.render(renderContext);
       });
     });
   }
 
+  handlePropCallbackEvents = (e, eventName) => {
+    // Checking if hook callback available
+    if(this.props[`_Hook_${eventName}`]) {
+      // Trigger hook callback
+      this.props[`_Hook_${eventName}`](e);
+    }
+  }
+
   onSearchClick = (e) => {
     console.log('Click onSearchClick');
+    this.handlePropCallbackEvents(e, 'onSearchClick');
   }
 
   onNextClick = (e) => {
     console.log('Click onNextClick');
+    this.handlePropCallbackEvents(e, 'onNextClick');
   }
 
   onPrevClick = (e) => {
     console.log('Click onPrevClick');
+    this.handlePropCallbackEvents(e, 'onPrevClick');
   }
 
   onZoonInClick = (e) => {
     console.log('Click onZoonInClick');
+    this.handlePropCallbackEvents(e, 'onZoonInClick');
   }
 
   onZoonOutClick = (e) => {
     console.log('Click onZoonOutClick');
+    this.handlePropCallbackEvents(e, 'onZoonOutClick');
+  }
+
+  onInputChange = (e) => {
+    console.log('Click onInputChange');
+    this.handlePropCallbackEvents(e, 'onInputChange');
   }
 
   render() {
     // Fetching reference to local.
     const { showHeaderBar, pdfLoaded } = this.state;
-    const HeaderProps = { showTextOnly : this.state.showTextOnly, showIconOnly: this.state.showIconOnly, totalPages: this.state.totalPages, pageNo: this.state.pageNo, handleSearchClick: this.onSearchClick, handleNextClick: this.onNextClick, handlePrevClick: this.onPrevClick }
+    const HeaderProps = { showTextOnly : this.state.showTextOnly, showIconOnly: this.state.showIconOnly, totalPages: this.state.totalPages, pageNo: this.state.pageNo, handleSearchClick: this.onSearchClick, handleNextClick: this.onNextClick, handlePrevClick: this.onPrevClick, handleInputChange: this.onInputChange }
+    const mainContainerStyle = Object.assign({}, styles.mainContainer, {height: this.state.availHeight, overflow: "hidden"})
     return (
-      <div id="pv-id-main-container" className="pv-main-container">
+      <div id="pv-id-main-container" className="pv-main-container" style={mainContainerStyle}>
         {
           // Only display header if state is showHeaderBar:true
           (showHeaderBar) ? <ReactPDF_Header config={HeaderProps}/> : null
         }
-        <div id="pv-id-body-container" className="pv-body-container">
+        <div id="pv-id-body-container" className="pv-body-container" style={{height: this.state.availHeight - 38, "width": "100%", "textAlign": "center", "overflow": "scroll"}}>
           {
             // Display Loading Screen
             (!pdfLoaded) ? <h4>Loading PDF File...</h4> : null

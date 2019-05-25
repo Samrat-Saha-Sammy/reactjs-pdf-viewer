@@ -11,11 +11,11 @@ const styles = {
     btnSecondary : {
       "margin": "0px 2px 2px 0px",
       "textAlign": "center",
-      "background": "#ed2553",
-      "padding": "8px 10px",
-      "fontSize": "16px",
+      "background": "transparent",
+      "padding": "2px",
+      "fontSize": "12px",
       "cursor": "pointer",
-      "border": "1px solid white",
+      "border": "0px solid white",
       "outline": "none",
       "color": "#ffffff",
       "textDecoration": "none"
@@ -23,16 +23,16 @@ const styles = {
     Text : {
         "margin": "0px 2px 2px 0px",
         "textAlign": "center",
-        "padding": "8px 10px",
-        "fontSize": "16px",
+        "padding": "2px",
+        "fontSize": "12px",
         "color": "#ffffff",
         "textDecoration": "none",
         "display": "inline-block"
     },
     Input : {
-        "fontSize": "16px",
-        "width": "35px",
-        "height": "32px",
+        "fontSize": "12px",
+        "width": "15px",
+        "height": "15px",
         "margin": "0px 2px 0 0",
         "display": "inline-block",
         "textAlign": "center",
@@ -40,15 +40,20 @@ const styles = {
         "border": "0px",
         "color": "white",
         "marginLeft": "60px"
-      }
+    },
+    headerContainer: {
+        "width": "100%",
+        "textAlign": "center",
+        "backgroundColor": "#474747",
+        "boxShadow": "inset 0 1px 1px hsla(0,0%,0%,.15), inset 0 -1px 0 hsla(0,0%,100%,.05), 0 1px 0 hsla(0,0%,0%,.15), 0 1px 1px hsla(0,0%,0%,.1)"
+    }
   }
 
 class ReactPDF_Header extends React.PureComponent {
     render() {
-        const { showIconOnly, showTextOnly, totalPages, pageNo, handleSearchClick, handleNextClick, handlePrevClick } = this.props.config;
+        const { showIconOnly, showTextOnly, totalPages, pageNo, handleSearchClick, handleNextClick, handlePrevClick, handleInputChange } = this.props.config;
         return (
-            <div id="pv-id-header-container" className="pv-header-container">
-                <h4>React PDF Viewer</h4>
+            <div id="pv-id-header-container" className="pv-header-container" style={styles.headerContainer}>
                 <button className="btn-secondary like-review" style={styles.btnSecondary} onClick={handleSearchClick}>
                 {
                     // Show Icon Only
@@ -100,7 +105,7 @@ class ReactPDF_Header extends React.PureComponent {
                     (!showIconOnly) ? `Zoom Out` : null
                 }
                 </button>
-                <input type="number" value={pageNo} style={styles.Input}/>
+                <input type="number" value={pageNo} style={styles.Input} onChange={handleInputChange}/>
                 <div style={styles.Text}> of {totalPages}</div>
             </div>
         )
