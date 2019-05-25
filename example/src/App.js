@@ -1,13 +1,14 @@
-import React, { Component } from 'react'
+import React from 'react';
+import ReactPDFViewer from 'react-pdf-viewer-app';
+import sampleFile from './pdf_sample_file.pdf';
+import './App.css';
 
-import ExampleComponent from 'react-pdf-viewer'
-
-export default class App extends Component {
-  render () {
-    return (
-      <div>
-        <ExampleComponent text='Modern React component module' />
-      </div>
-    )
-  }
+function App() {
+  return (
+    <div className="App">
+      <ReactPDFViewer url={sampleFile}/>
+    </div>
+  );
 }
+
+export default App;
