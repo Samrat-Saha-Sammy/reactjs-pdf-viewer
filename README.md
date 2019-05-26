@@ -2,6 +2,8 @@
 
 > A PDF viewer for ReactJS
 
+# PLUGIN UNDER DEVELOPMENT, AVOID USAGE!!
+
 [![NPM](https://img.shields.io/npm/v/react-pdf-viewer.svg)](https://www.npmjs.com/package/react-pdf-viewer) [![JavaScript Style Guide](https://img.shields.io/badge/code_style-standard-brightgreen.svg)](https://standardjs.com)
 
 ## Install
