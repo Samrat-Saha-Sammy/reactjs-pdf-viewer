@@ -49,7 +49,7 @@ const styles = {
     }
   }
 
-class ReactPDF_Header extends React.PureComponent {
+class ReactJSPDF_Header extends React.PureComponent {
     render() {
         const { showIconOnly, showTextOnly, totalPages, pageNo, handleSearchClick, handleNextClick, handlePrevClick, handleInputChange } = this.props.config;
         return (
@@ -112,4 +112,4 @@ class ReactPDF_Header extends React.PureComponent {
     }
 }
 
-export default ReactPDF_Header;
+export default ReactJSPDF_Header;

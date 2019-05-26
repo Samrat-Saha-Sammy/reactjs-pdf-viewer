@@ -1,10 +1,10 @@
 {
-  "name": "react-pdf-viewer-app",
-  "version": "1.0.0",
+  "name": "reactjs-pdf-viewer",
+  "version": "0.1.0-beta.1",
   "description": "A PDF viewer for ReactJS",
   "author": "Samrat-Saha-Sammy",
   "license": "MIT",
-  "repository": "Samrat-Saha-Sammy/react-pdf-viewer",
+  "repository": "Samrat-Saha-Sammy/reactjs-pdf-viewer",
   "main": "dist/index.js",
   "module": "dist/index.es.js",
   "jsnext:main": "dist/index.es.js",

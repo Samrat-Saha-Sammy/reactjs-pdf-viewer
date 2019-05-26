@@ -1,6 +1,6 @@
 import React from 'react';
 var pdfjsLib = require('./../lib/pdf');
-import ReactPDF_Header from './Components/Header/index';
+import ReactJSPDF_Header from './Components/Header/index';
 //import styles from './style.css';
 
 const styles = {
@@ -14,7 +14,7 @@ const styles = {
     "color": "white"
   }
 }
-class ReactPDFViewer extends React.Component {
+class ReactJSPDFViewer extends React.Component {
   
   constructor(props) {
     super(props);
@@ -120,7 +120,7 @@ class ReactPDFViewer extends React.Component {
       <div id="pv-id-main-container" className="pv-main-container" style={mainContainerStyle}>
         {
           // Only display header if state is showHeaderBar:true
-          (showHeaderBar) ? <ReactPDF_Header config={HeaderProps}/> : null
+          (showHeaderBar) ? <ReactJSPDF_Header config={HeaderProps}/> : null
         }
         <div id="pv-id-body-container" className="pv-body-container" style={{height: this.state.availHeight - 38, "width": "100%", "textAlign": "center", "overflow": "scroll"}}>
           {
@@ -133,4 +133,4 @@ class ReactPDFViewer extends React.Component {
     );
   }
 }
-export default ReactPDFViewer;
+export default ReactJSPDFViewer;

@@ -1,5 +1,5 @@
 {
-  "name": "react-pdf-viewer-example-app",
+  "name": "react-pdf-viewer-example",
   "homepage": "https://Samrat-Saha-Sammy.github.io/react-pdf-viewer",
   "version": "0.0.0",
   "license": "MIT",
@@ -9,7 +9,7 @@
     "react": "^16.4.1",
     "react-dom": "^16.4.1",
     "react-scripts": "^1.1.4",
-    "react-pdf-viewer-app": "file:.."
+    "reactjs-pdf-viewer": "file:.."
   },
   "scripts": {
     "start": "react-scripts start",
