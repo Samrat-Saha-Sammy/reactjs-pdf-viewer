@@ -1,5 +1,5 @@
 import React from "react";
-//var pdfjsLib = require("./../lib/pdf");
+var pdfjsLib = require("./../lib/pdf");
 import ReactJSPDF_Header from "./Components/Header/index";
 //import styles from './style.css';
 
