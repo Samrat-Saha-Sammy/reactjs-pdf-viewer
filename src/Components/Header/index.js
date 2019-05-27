@@ -1,5 +1,7 @@
 import React from "react";
 import ReactJSPDF_ButtonBlock from "./../ButtonBlock/index";
+import * as EN from "./../../constants/en";
+
 import {
   FaSearch as SearchIcon,
   FaChevronLeft as LeftArrowIcon,
@@ -61,6 +63,8 @@ class ReactJSPDF_Header extends React.PureComponent {
       handleSearchClick,
       handleNextClick,
       handlePrevClick,
+      handleZoonInClick,
+      handleZoonOutClick,
       handleInputChange
     } = this.props.config;
     return (
@@ -72,47 +76,47 @@ class ReactJSPDF_Header extends React.PureComponent {
         <ReactJSPDF_ButtonBlock
           btnBlockStyle={styles.btnSecondary}
           onClickEvent={handleSearchClick}
-          title={`Search Document`}
+          title={EN.SEARCH_TITLE}
           showIconOnly={showIconOnly}
           showTextOnly={showTextOnly}
           BtnIcon={SearchIcon}
-          btnText={`Search`}
+          btnText={EN.SEARCH_STRING}
         />
         <ReactJSPDF_ButtonBlock
           btnBlockStyle={styles.btnSecondary}
           onClickEvent={handlePrevClick}
-          title={`Previous Page`}
+          title={EN.PREV_TITLE}
           showIconOnly={showIconOnly}
           showTextOnly={showTextOnly}
           BtnIcon={LeftArrowIcon}
-          btnText={`Previous`}
+          btnText={EN.PREV_STRING}
         />
         <ReactJSPDF_ButtonBlock
           btnBlockStyle={styles.btnSecondary}
           onClickEvent={handleNextClick}
-          title={`Next Page`}
+          title={EN.NEXT_TITLE}
           showIconOnly={showIconOnly}
           showTextOnly={showTextOnly}
           BtnIcon={RightArrowIcon}
-          btnText={`Next`}
+          btnText={EN.NEXT_STRING}
         />
         <ReactJSPDF_ButtonBlock
           btnBlockStyle={styles.btnSecondary}
-          onClickEvent={handleNextClick}
-          title={`Zoom In`}
+          onClickEvent={handleZoonInClick}
+          title={EN.ZOOM_IN_TITLE}
           showIconOnly={showIconOnly}
           showTextOnly={showTextOnly}
           BtnIcon={PlusIcon}
-          btnText={`Zoom In`}
+          btnText={EN.ZOOM_IN_STRING}
         />
         <ReactJSPDF_ButtonBlock
           btnBlockStyle={styles.btnSecondary}
-          onClickEvent={handleNextClick}
-          title={`Zoom Out`}
+          onClickEvent={handleZoonOutClick}
+          title={EN.ZOOM_OUT_TITLE}
           showIconOnly={showIconOnly}
           showTextOnly={showTextOnly}
           BtnIcon={MinusIcon}
-          btnText={`Zoom Out`}
+          btnText={EN.ZOOM_OUT_STRING}
         />
         <input
           type="number"

@@ -1,6 +1,7 @@
 import React from "react";
 var pdfjsLib = require("./../lib/pdf");
 import ReactJSPDF_Header from "./Components/Header/index";
+import * as Constants from "./constants/constant";
 //import styles from './style.css';
 
 const styles = {
@@ -14,6 +15,8 @@ const styles = {
     color: "white"
   }
 };
+
+let _pv_pdf = null;
 class ReactJSPDFViewer extends React.Component {
   constructor(props) {
     super(props);
@@ -23,10 +26,11 @@ class ReactJSPDFViewer extends React.Component {
       PDFJSBuildVersion: pdfjsLib.build,
       PDFJSVersion: pdfjsLib.version,
       pdfLoaded: false,
-      pageNo: 1, // Load default page
+      initPageNo: this.props.initPageNo || 1, // Load default page
+      pagesLoadRange: this.props.pagesRange || 3,
       totalPages: null,
       pdfFingerprint: null,
-      showIconOnly: false,
+      showIconOnly: true,
       showTextOnly: false,
       showHeaderBar: true
     };
@@ -43,40 +47,72 @@ class ReactJSPDFViewer extends React.Component {
       //
       // Fetch the first page
       //
-      pdf.getPage(this.state.pageNo).then(page => {
-        var scale = 1.5;
-        var viewport = page.getViewport(scale);
-        //
-        // Prepare canvas using PDF page dimensions
-        //
-        var canvas = document.getElementById("pv-id-canvas");
-        var context = canvas.getContext("2d");
-        canvas.height = viewport.height;
-        canvas.width = viewport.width;
-        //
-        // Render PDF page into canvas context
-        //
-        var renderContext = {
-          canvasContext: context,
-          viewport: viewport
-        };
-        // Initiate the loaded state
-        this.setState({
-          pdfLoaded: true,
-          availHeight: viewport.height,
-          availWidth: viewport.width
-        });
-        page.render(renderContext);
-      });
+      _pv_pdf = pdf;
+      this.handlePageLoadInRange(this.state.initPageNo);
     });
   }
 
+  handlePageLoadInRange = indexPageNo => {
+    if (_pv_pdf === null) {
+      console.warn("PdfJS Not Loaded");
+      return false;
+    }
+    for (let i = indexPageNo; i <= this.state.pagesLoadRange; i++) {
+      this.handleSinglePageLoad(i);
+    }
+  };
+
+  handleSinglePageLoad = pageNo => {
+    debugger;
+    if (_pv_pdf === null) {
+      console.warn("PdfJS Not Loaded");
+      return false;
+    }
+    // Generate New Canvas for Each Page
+    var canvasContainer = document.getElementById("pv-id-canvas-container");
+    var canvas = document.createElement("canvas");
+    var context = canvas.getContext("2d");
+    canvas.className = `pv-id-canvas-${pageNo}`;
+    canvasContainer.appendChild(canvas);
+
+    _pv_pdf.getPage(pageNo).then(page => {
+      var scale = 1.5;
+      var viewport = page.getViewport(scale);
+      //
+      // Prepare canvas using PDF page dimensions
+      //
+      canvas.height = viewport.height;
+      canvas.width = viewport.width;
+      //
+      // Render PDF page into canvas context
+      //
+      var renderContext = {
+        canvasContext: context,
+        viewport: viewport
+      };
+      // Initiate the loaded state
+      this.setState({
+        pdfLoaded: true,
+        availHeight: viewport.height,
+        availWidth: viewport.width
+      });
+      page.render(renderContext).promise.then(() => {
+        console.log("Page render Complete");
+        this.onPageRenderComplete();
+      });
+    });
+  };
+
   handlePropCallbackEvents = (e, eventName) => {
     // Checking if hook callback available
-    if (this.props[`_Hook_${eventName}`]) {
+    if (this.props[`${Constants.HOOK}${eventName}`]) {
       // Trigger hook callback
-      this.props[`_Hook_${eventName}`](e);
+      this.props[`${Constants.HOOK}${eventName}`](e);
     }
+  };
+
+  onPageRenderComplete = e => {
+    this.handlePropCallbackEvents(e, "onEachPageRenderComplete");
   };
 
   onSearchClick = e => {
@@ -122,7 +158,9 @@ class ReactJSPDFViewer extends React.Component {
       handleSearchClick: this.onSearchClick,
       handleNextClick: this.onNextClick,
       handlePrevClick: this.onPrevClick,
-      handleInputChange: this.onInputChange
+      handleInputChange: this.onInputChange,
+      handleZoonInClick: this.onZoonInClick,
+      handleZoonOutClick: this.onZoonOutClick
     };
     // Overriding Main Container Style Object
     const mainContainerStyle = Object.assign({}, styles.mainContainer, {
@@ -149,7 +187,7 @@ class ReactJSPDFViewer extends React.Component {
         >
           {// Display Loading Screen
           !pdfLoaded ? <h4>Loading PDF File...</h4> : null}
-          <canvas id="pv-id-canvas" />
+          <div id="pv-id-canvas-container" />
         </div>
       </div>
     );

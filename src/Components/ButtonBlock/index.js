@@ -1,5 +1,13 @@
 import React from "react";
 
+const Btn_Text_Div = {
+  display: "inline-block",
+  lineHeight: "18px",
+  verticalAlign: "middle",
+  marginLeft: "6px",
+  marginBottom: "8px"
+};
+
 const ReactJSPDF_ButtonBlock = props => {
   // Explicit Import of Component from Props
   const BtnIcon = props.BtnIcon;
@@ -26,9 +34,7 @@ const ReactJSPDF_ButtonBlock = props => {
         {// Show Icon Only
         !showTextOnly ? <BtnIcon /> : null}
         {// Show Icon Only
-        !showIconOnly ? (
-          <div style={{ display: "inline-block" }}>{btnText}</div>
-        ) : null}
+        !showIconOnly ? <div style={Btn_Text_Div}>{btnText}</div> : null}
       </button>
     </div>
   );
