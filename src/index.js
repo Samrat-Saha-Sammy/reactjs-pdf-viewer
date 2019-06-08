@@ -2,19 +2,7 @@ import React from "react";
 var pdfjsLib = require("./../lib/pdf");
 import ReactJSPDF_Header from "./Components/Header/index";
 import * as Constants from "./constants/constant";
-//import styles from './style.css';
-
-const styles = {
-  mainContainer: {
-    display: "flex",
-    flexDirection: "column",
-    alignItems: "center",
-    justifyContent: "center",
-    backgroundColor: "#282c34",
-    fontSize: "calc(10px + 2vmin)",
-    color: "white"
-  }
-};
+import "./styles.css";
 
 let _pv_pdf = null;
 class ReactJSPDFViewer extends React.Component {
@@ -27,43 +15,63 @@ class ReactJSPDFViewer extends React.Component {
       PDFJSVersion: pdfjsLib.version,
       pdfLoaded: false,
       initPageNo: this.props.initPageNo || 1, // Load default page
+      currentPageNo: null,
       pagesLoadRange: this.props.pagesRange || 3,
       totalPages: null,
       pdfFingerprint: null,
+      pagesLoaded: [],
       showIconOnly: true,
       showTextOnly: false,
-      showHeaderBar: true
+      showHeaderBar: true,
+      funcRegister: false,
+      funcRegisterTable: {}
     };
   }
 
   componentDidMount() {
-    //var url = sampleFile;
     var loadingTask = pdfjsLib.getDocument(this.props.url);
     loadingTask.promise.then(pdf => {
       this.setState({
         totalPages: pdf.numPages,
         pdfFingerprint: pdf.fingerprint
       });
-      //
-      // Fetch the first page
-      //
       _pv_pdf = pdf;
       this.handlePageLoadInRange(this.state.initPageNo);
     });
   }
 
-  handlePageLoadInRange = indexPageNo => {
+  handlePageLoadInRange = (indexPageNo, reverseLoad = false) => {
+    console.log(`handlePageLoadInRange Triggered`);
     if (_pv_pdf === null) {
       console.warn("PdfJS Not Loaded");
       return false;
     }
-    for (let i = indexPageNo; i <= this.state.pagesLoadRange; i++) {
+    this.setState({ currentPageNo: indexPageNo });
+    let targetPage = reverseLoad
+      ? indexPageNo - this.state.pagesLoadRange
+      : indexPageNo + this.state.pagesLoadRange;
+    let lowerRange = reverseLoad ? targetPage : indexPageNo;
+    let MaxRange = reverseLoad ? indexPageNo : targetPage;
+    for (let i = lowerRange; i < MaxRange; ) {
+      console.log(`Loading Single Page ${i}`);
+      // Not the last page
+      if (i > this.state.totalPages) {
+        console.info("INFO: Last Page");
+        return false;
+      }
       this.handleSinglePageLoad(i);
+      if (reverseLoad) {
+        // Reverse Loading of Pages
+        i--;
+      } else {
+        // Forward Loading of Pages
+        i++;
+      }
     }
   };
 
   handleSinglePageLoad = pageNo => {
-    debugger;
+    console.log(`handleSinglePageLoad Triggered ${pageNo}`);
     if (_pv_pdf === null) {
       console.warn("PdfJS Not Loaded");
       return false;
@@ -72,11 +80,12 @@ class ReactJSPDFViewer extends React.Component {
     var canvasContainer = document.getElementById("pv-id-canvas-container");
     var canvas = document.createElement("canvas");
     var context = canvas.getContext("2d");
-    canvas.className = `pv-id-canvas-${pageNo}`;
+    canvas.className = `pv-canvas-${pageNo}`;
+    canvas.id = `pv-id-canvas-${pageNo}`;
     canvasContainer.appendChild(canvas);
 
     _pv_pdf.getPage(pageNo).then(page => {
-      var scale = 1.5;
+      var scale = 1;
       var viewport = page.getViewport(scale);
       //
       // Prepare canvas using PDF page dimensions
@@ -97,8 +106,7 @@ class ReactJSPDFViewer extends React.Component {
         availWidth: viewport.width
       });
       page.render(renderContext).promise.then(() => {
-        console.log("Page render Complete");
-        this.onPageRenderComplete();
+        this.onPageRenderComplete({ pageNo: pageNo });
       });
     });
   };
@@ -112,6 +120,26 @@ class ReactJSPDFViewer extends React.Component {
   };
 
   onPageRenderComplete = e => {
+    console.log("Page render Complete", e);
+    let currentPagesList = this.state.pagesLoaded;
+    // Pushing new List
+    currentPagesList.push(e.pageNo);
+    // De-structure the state variables
+    let { funcRegister, funcRegisterTable } = this.state;
+    debugger;
+    if (funcRegister && typeof funcRegisterTable[e.pageNo] !== "undefined") {
+      // Call the Register Func
+      funcRegisterTable[e.pageNo]();
+      // De register the event
+      delete funcRegisterTable[e.pageNo];
+      this.setState({
+        funcRegister: false,
+        funcRegister: funcRegisterTable
+      });
+    }
+    this.setState({
+      pagesLoaded: currentPagesList
+    });
     this.handlePropCallbackEvents(e, "onEachPageRenderComplete");
   };
 
@@ -120,13 +148,72 @@ class ReactJSPDFViewer extends React.Component {
     this.handlePropCallbackEvents(e, "onSearchClick");
   };
 
+  onSetCurrentPage = pointedPageIndex => {
+    let pageID = `pv-id-canvas-${pointedPageIndex}`;
+    let scrollDivMainID = `pv-id-body-container`;
+    this.setState({ currentPageNo: pointedPageIndex });
+    // After Page Change
+    document.getElementById(
+      scrollDivMainID
+    ).scrollTop += this.state.availHeight;
+  };
+
   onNextClick = e => {
-    console.log("Click onNextClick");
+    const { currentPageNo, pagesLoaded, totalPages } = this.state;
+    let nextPage = currentPageNo + 1;
+    console.log("Click onNextClick", nextPage);
+
+    // Not the last page
+    if (nextPage > totalPages) {
+      console.info("INFO: Last Page");
+      return false;
+    }
+    // Check if next page is already loaded
+    console.log(pagesLoaded.indexOf(nextPage) === -1);
+    if (pagesLoaded.indexOf(nextPage) === -1) {
+      // Page Not Loaded
+      // Load next batch
+      this.handlePageLoadInRange(nextPage);
+      // Register On Next Page Load
+      this.registerFuncCall(nextPage, () => {
+        this.onSetCurrentPage(nextPage);
+      });
+    } else {
+      // Display the page in view
+      this.onSetCurrentPage(nextPage);
+    }
     this.handlePropCallbackEvents(e, "onNextClick");
   };
 
+  registerFuncCall = (pageNo, callBack) => {
+    let newTable = Object.assign({}, this.state.funcRegisterTable, {
+      [pageNo]: callBack
+    });
+    this.setState({
+      funcRegister: true,
+      funcRegisterTable: newTable
+    });
+  };
+
   onPrevClick = e => {
+    const { currentPageNo, pagesLoaded } = this.state;
     console.log("Click onPrevClick");
+    let prevPage = currentPageNo - 1;
+    // Not the first page
+    if (prevPage === 0) {
+      console.info("INFO: First Page");
+      return false;
+    }
+    // Check if next page is already loaded
+    console.log(pagesLoaded.indexOf(prevPage) === -1);
+    if (pagesLoaded.indexOf(prevPage) === -1) {
+      // Page Not Loaded
+      // Load next batch
+      this.handlePageLoadInRange(prevPage, true);
+    } else {
+      // Display the page in view
+      this.onSetCurrentPage(prevPage);
+    }
     this.handlePropCallbackEvents(e, "onPrevClick");
   };
 
@@ -154,7 +241,7 @@ class ReactJSPDFViewer extends React.Component {
       showTextOnly: this.state.showTextOnly,
       showIconOnly: this.state.showIconOnly,
       totalPages: this.state.totalPages,
-      pageNo: this.state.pageNo,
+      currentPageNo: this.state.currentPageNo,
       handleSearchClick: this.onSearchClick,
       handleNextClick: this.onNextClick,
       handlePrevClick: this.onPrevClick,
@@ -163,10 +250,10 @@ class ReactJSPDFViewer extends React.Component {
       handleZoonOutClick: this.onZoonOutClick
     };
     // Overriding Main Container Style Object
-    const mainContainerStyle = Object.assign({}, styles.mainContainer, {
+    const mainContainerStyle = {
       height: this.state.availHeight,
       overflow: "hidden"
-    });
+    };
     return (
       <div
         id="pv-id-main-container"
@@ -178,12 +265,7 @@ class ReactJSPDFViewer extends React.Component {
         <div
           id="pv-id-body-container"
           className="pv-body-container"
-          style={{
-            height: this.state.availHeight - 38,
-            width: "100%",
-            textAlign: "center",
-            overflow: "scroll"
-          }}
+          style={{ height: this.state.availHeight - 38 }}
         >
           {// Display Loading Screen
           !pdfLoaded ? <h4>Loading PDF File...</h4> : null}

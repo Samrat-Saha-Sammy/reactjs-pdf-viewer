@@ -1,25 +1,20 @@
 /* add css styles here (optional) */
 
 .pv-main-container {
-  
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  background-color: rgb(40, 44, 52);
+  font-size: calc(10px + 2vmin);
+  color: white;
+  overflow: hidden;
 }
 
-.pv-header-container .btn-secondary {
-  display: block;
-  margin: 40px auto 0px;
+.pv-body-container {
   text-align: center;
-  background: #ed2553;
-  border-radius: 3px;
-  box-shadow: 0 10px 20px -8px rgb(240, 75, 113);
-  padding: 10px 17px;
-  font-size: 18px;
-  cursor: pointer;
-  border: none;
-  outline: none;
-  color: #ffffff;
-  text-decoration: none;
-  -webkit-transition: 0.3s ease;
-  transition: 0.3s ease;
+  overflow-y: auto;
+  overflow-x: hidden;
 }
 .pv-header-container .btn-secondary:hover {
   transform: translateY(-3px);
@@ -38,7 +33,5 @@
   100% { transform: scale(1); }
 } */
 
-
 .pv-body-container {
-
 }

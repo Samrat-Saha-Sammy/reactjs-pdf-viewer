@@ -1,0 +1,46 @@
+.pv-header-container .btnSecondary {
+  margin: 0px 8px 2px 0px;
+  text-align: center;
+  background: transparent;
+  padding: 2px;
+  font-size: 18px;
+  cursor: pointer;
+  border: 0px solid white;
+  outline: none;
+  color: rgb(255, 255, 255);
+  text-decoration: none;
+}
+
+.pv-header-container {
+  width: 100%;
+  text-align: center;
+  background-color: rgb(71, 71, 71);
+  position: sticky;
+  top: 0px;
+  box-shadow: rgba(0, 0, 0, 0.15) 0px 1px 1px inset,
+    rgba(255, 255, 255, 0.05) 0px -1px 0px inset,
+    rgba(0, 0, 0, 0.15) 0px 1px 0px, rgba(0, 0, 0, 0.1) 0px 1px 1px;
+}
+
+.pv-header-pageno {
+  font-size: "12px";
+  width: "28px";
+  height: "18px";
+  margin: "0px 2px 0 0";
+  display: "inline-block";
+  text-align: center;
+  background-color: "#525863";
+  border: "0px";
+  color: "white";
+  margin-left: "60px";
+}
+
+.pv-header-total-pages {
+  margin: "0px 2px 2px 0px";
+  text-align: "center";
+  padding: "2px";
+  font-size: "12px";
+  color: "#ffffff";
+  text-decoration: "none";
+  display: "inline-block";
+}

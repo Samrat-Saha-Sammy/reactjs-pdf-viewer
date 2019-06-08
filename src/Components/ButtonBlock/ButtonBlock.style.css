@@ -1,0 +1,14 @@
+/* Style for Button Block */
+
+.pv-button-text {
+  display: inline-block;
+  line-height: 18px;
+  vertical-align: middle;
+  margin-left: 6px;
+  margin-bottom: 8px;
+  cursor: pointer;
+}
+
+.pv-button-container {
+  cursor: pointer;
+}
