@@ -11,4 +11,17 @@
 
 .pv-button-container {
   cursor: pointer;
+  height: 100%;
+  padding: 0 10px 0 0;
+}
+
+.pv-button-image {
+  width: auto;
+  height: auto;
+  max-height: 40%;
+}
+
+.btn-secondary {
+  width: 100%;
+  height: 100%;
 }

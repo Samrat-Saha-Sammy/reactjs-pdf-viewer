@@ -1,14 +1,13 @@
 import React from "react";
 import ReactJSPDF_ButtonBlock from "./../ButtonBlock/index";
 import * as EN from "./../../constants/en";
+import "./Header.style.css";
 
-import {
-  MdSearch as SearchIcon,
-  MdArrowUpward as LeftArrowIcon,
-  MdArrowDownward as RightArrowIcon,
-  MdAdd as PlusIcon,
-  MdRemove as MinusIcon
-} from "react-icons/md";
+import leftArrowIcon from "../../Assets/icons/up-arrow.png";
+import rightArrowIcon from "../../Assets/icons/down-arrow.png";
+import searchIcon from "../../Assets/icons/search.png";
+import plusIcon from "../../Assets/icons/add.png";
+import minusIcon from "../../Assets/icons/substract.png";
 
 class ReactJSPDF_Header extends React.PureComponent {
   render() {
@@ -31,7 +30,7 @@ class ReactJSPDF_Header extends React.PureComponent {
           title={EN.PREV_TITLE}
           showIconOnly={showIconOnly}
           showTextOnly={showTextOnly}
-          BtnIcon={LeftArrowIcon}
+          BtnIcon={leftArrowIcon}
           btnText={EN.PREV_STRING}
         />
         <ReactJSPDF_ButtonBlock
@@ -39,7 +38,7 @@ class ReactJSPDF_Header extends React.PureComponent {
           title={EN.NEXT_TITLE}
           showIconOnly={showIconOnly}
           showTextOnly={showTextOnly}
-          BtnIcon={RightArrowIcon}
+          BtnIcon={rightArrowIcon}
           btnText={EN.NEXT_STRING}
         />
         <input
@@ -55,7 +54,7 @@ class ReactJSPDF_Header extends React.PureComponent {
           title={EN.ZOOM_IN_TITLE}
           showIconOnly={showIconOnly}
           showTextOnly={showTextOnly}
-          BtnIcon={PlusIcon}
+          BtnIcon={plusIcon}
           btnText={EN.ZOOM_IN_STRING}
         />
         <ReactJSPDF_ButtonBlock
@@ -63,7 +62,7 @@ class ReactJSPDF_Header extends React.PureComponent {
           title={EN.ZOOM_OUT_TITLE}
           showIconOnly={showIconOnly}
           showTextOnly={showTextOnly}
-          BtnIcon={MinusIcon}
+          BtnIcon={minusIcon}
           btnText={EN.ZOOM_OUT_STRING}
         />
         <ReactJSPDF_ButtonBlock
@@ -71,7 +70,7 @@ class ReactJSPDF_Header extends React.PureComponent {
           title={EN.SEARCH_TITLE}
           showIconOnly={showIconOnly}
           showTextOnly={showTextOnly}
-          BtnIcon={SearchIcon}
+          BtnIcon={searchIcon}
           btnText={EN.SEARCH_STRING}
         />
       </div>

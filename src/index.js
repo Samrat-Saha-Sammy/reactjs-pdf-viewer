@@ -126,7 +126,6 @@ class ReactJSPDFViewer extends React.Component {
     currentPagesList.push(e.pageNo);
     // De-structure the state variables
     let { funcRegister, funcRegisterTable } = this.state;
-    debugger;
     if (funcRegister && typeof funcRegisterTable[e.pageNo] !== "undefined") {
       // Call the Register Func
       funcRegisterTable[e.pageNo]();
