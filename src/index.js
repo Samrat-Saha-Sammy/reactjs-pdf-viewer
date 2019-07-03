@@ -149,12 +149,11 @@ class ReactJSPDFViewer extends React.Component {
 
   onSetCurrentPage = pointedPageIndex => {
     let pageID = `pv-id-canvas-${pointedPageIndex}`;
-    let scrollDivMainID = `pv-id-body-container`;
     this.setState({ currentPageNo: pointedPageIndex });
     // After Page Change
-    document.getElementById(
-      scrollDivMainID
-    ).scrollTop += this.state.availHeight;
+    document
+      .getElementById(pageID)
+      .scrollIntoView({ behavior: "smooth", block: "end", inline: "nearest" });
   };
 
   onNextClick = e => {
